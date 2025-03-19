@@ -148,6 +148,11 @@ func NewProxyHandler(nomadAddress *url.URL, jobHandler *admissionctrl.JobHandler
 				reqCtx.AccessorID = tokenInfo.AccessorID
 				reqCtx.TokenInfo = tokenInfo
 			}
+		}
+
+		// Even tho we have resolveToken set to true, the initial connection will be issued without a token for the auth
+		// so it's better to validate whether it's populated or not
+		if reqCtx.TokenInfo != nil {
 			appLogger.Info("Request received", "path", r.URL.Path, "method", r.Method, "clientIP", reqCtx.ClientIP, "accessorID", reqCtx.AccessorID)
 		} else {
 			appLogger.Info("Request received", "path", r.URL.Path, "method", r.Method, "clientIP", reqCtx.ClientIP)
